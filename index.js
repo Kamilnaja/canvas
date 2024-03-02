@@ -2,7 +2,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 import { Game } from "./Game.js";
-import { board } from "./board.js";
+import { board, getBoardItem, getYCoordinate } from "./board.js";
 import { config } from "./config.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
@@ -95,17 +95,17 @@ canvas.addEventListener("click", (e) => {
     return;
   }
 
-  const piece = board[y][x];
+  const piece = board[getYCoordinate(y)][x];
 
   if (piece?.actualSymbol && Game.countOfCorrectClicks === 0) {
     strokeClickedField(x, y, fieldsCount);
     Game.setChoosenField({ x, y });
     Game.incrementNumberOfCorrectClicks();
   } else if (Game.countOfCorrectClicks === 1) {
-    const piece =
-      board[fieldsCount - Game.choosenField.y - 1][Game.choosenField.x];
-    board[fieldsCount - Game.choosenField.y - 1][Game.choosenField.x] = null;
-    board[fieldsCount - y - 1][x] = piece;
+    const piece = getBoardItem(Game.choosenField.x, Game.choosenField.y);
+
+    board[getYCoordinate(Game.choosenField.y)][Game.choosenField.x] = null;
+    board[getYCoordinate(y)][x] = piece;
     redrawBoard();
     Game.resetNumberOfCorrectClicks();
   }

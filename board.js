@@ -1,3 +1,4 @@
+import { config } from "./config.js";
 import { Piece } from "./piece.js";
 import { pieces } from "./pieces.js";
 
@@ -47,3 +48,11 @@ export const board = [
     new Piece(1, pieces.R),
   ],
 ];
+
+export const getBoardItem = (x, y) => {
+  return board[config.fieldsCount - 1 - y][x];
+};
+
+export const getYCoordinate = (y) => {
+  return config.fieldsCount - 1 - y;
+};
