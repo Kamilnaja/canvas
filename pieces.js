@@ -1,4 +1,4 @@
-const pieces = {
+export const pieces = {
   R: {
     name: "Rook",
     symbol: ["♜", "♖"],
