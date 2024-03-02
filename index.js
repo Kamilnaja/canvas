@@ -1,10 +1,12 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+import { Game } from "./Game.js";
 import { board } from "./board.js";
 import { config } from "./config.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
+
 const { fieldSize } = config;
 
 const drawBoard = (ix, iy) => {
@@ -60,6 +62,18 @@ const drawLetters = () => {
   }
 };
 
+const strokeClickedField = (x, y, fieldsCount) => {
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = "lime";
+
+  ctx.strokeRect(
+    x * fieldSize + config.leftOffset,
+    (fieldsCount - y - 1) * fieldSize,
+    fieldSize,
+    fieldSize
+  );
+};
+
 const init = () => {
   board.forEach((_, ix) => {
     board.forEach((_, iy) => {
@@ -75,7 +89,16 @@ init();
 
 canvas.addEventListener("click", (e) => {
   const { x, y } = getFieldCoordinate(e);
-  console.log(x, y);
-  const piece = board[y][x];
-  console.log(piece);
+  const { fieldsCount } = config;
+
+  if (x < 0 || y < 0 || x >= fieldsCount || y >= fieldsCount) {
+    return;
+  }
+  Game.incrementNumberOfCorrectClicks();
+
+  console.log(Game.countOfCorrectClicks);
+
+  const actualSymbol = board[y][x]?.actualSymbol;
+
+  actualSymbol && strokeClickedField(x, y, fieldsCount);
 });
