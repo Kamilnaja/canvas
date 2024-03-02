@@ -1,6 +1,6 @@
 export const config = {
-  ctcWidth: 600,
-  ctcHeight: 400,
+  ctxWidth: 600,
+  ctxHeight: 500,
   boardSize: 400,
   fieldSize: 400 / 8,
   verticalFieldsOffset: 15,

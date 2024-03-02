@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 
 import { board } from "./board.js";
 import { config } from "./config.js";
+import { getLetter } from "./utils/getLetter.js";
 const { fieldSize } = config;
 
 const drawBoard = (ix, iy) => {
@@ -12,7 +13,7 @@ const drawBoard = (ix, iy) => {
   const useColors = ix % 2 === 0 ? colors : [...colors.reverse()];
   ctx.fillStyle = useColors[iy % 2];
   ctx.fillRect(
-    ix * fieldSize + config.leftOffset,
+    ix * fieldSize + leftOffset,
     iy * fieldSize,
     fieldSize,
     fieldSize
@@ -32,11 +33,39 @@ const drawPieces = (iy, ix) => {
   );
 };
 
+const drawNumbers = () => {
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+
+  for (let i = 0; i < 8; i++) {
+    ctx.fillText(
+      8 - i,
+      config.leftOffset / 3,
+      i * fieldSize + fieldSize / 2 + config.verticalFieldsOffset
+    );
+  }
+};
+
+const drawLetters = () => {
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+
+  for (let i = 0; i < 8; i++) {
+    ctx.fillText(
+      getLetter(i).toUpperCase(),
+      i * fieldSize + fieldSize / 2 + 20,
+      config.boardSize + 30
+    );
+  }
+};
+
 const init = () => {
   board.forEach((_, ix) => {
     board.forEach((_, iy) => {
       drawBoard(ix, iy);
       drawPieces(iy, ix);
+      drawNumbers();
+      drawLetters();
     });
   });
 };
