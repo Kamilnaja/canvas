@@ -102,10 +102,12 @@ canvas.addEventListener("click", (e) => {
     Game.setChoosenField({ x, y });
     Game.incrementNumberOfCorrectClicks();
   } else if (Game.countOfCorrectClicks === 1) {
-    const { x, y } = Game.choosenField;
-    Game.resetNumberOfCorrectClicks();
-    board[fieldsCount - y - 1][x] = null;
+    const piece =
+      board[fieldsCount - Game.choosenField.y - 1][Game.choosenField.x];
+    board[fieldsCount - Game.choosenField.y - 1][Game.choosenField.x] = null;
+    board[fieldsCount - y - 1][x] = piece;
     redrawBoard();
+    Game.resetNumberOfCorrectClicks();
   }
 });
 
