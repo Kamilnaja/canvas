@@ -94,11 +94,22 @@ canvas.addEventListener("click", (e) => {
   if (x < 0 || y < 0 || x >= fieldsCount || y >= fieldsCount) {
     return;
   }
-  Game.incrementNumberOfCorrectClicks();
 
-  console.log(Game.countOfCorrectClicks);
+  const piece = board[y][x];
 
-  const actualSymbol = board[y][x]?.actualSymbol;
-
-  actualSymbol && strokeClickedField(x, y, fieldsCount);
+  if (piece?.actualSymbol && Game.countOfCorrectClicks === 0) {
+    strokeClickedField(x, y, fieldsCount);
+    Game.setChoosenField({ x, y });
+    Game.incrementNumberOfCorrectClicks();
+  } else if (Game.countOfCorrectClicks === 1) {
+    const { x, y } = Game.choosenField;
+    Game.resetNumberOfCorrectClicks();
+    board[fieldsCount - y - 1][x] = null;
+    redrawBoard();
+  }
 });
+
+const redrawBoard = () => {
+  ctx.clearRect(0, 0, config.ctxWidth, config.ctxHeight);
+  init();
+};
