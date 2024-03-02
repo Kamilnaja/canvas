@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 
 import { board } from "./board.js";
 import { config } from "./config.js";
+import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
 const { fieldSize } = config;
 
@@ -71,3 +72,10 @@ const init = () => {
 };
 
 init();
+
+canvas.addEventListener("click", (e) => {
+  const { x, y } = getFieldCoordinate(e);
+  console.log(x, y);
+  const piece = board[y][x];
+  console.log(piece);
+});
