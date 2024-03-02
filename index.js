@@ -16,18 +16,7 @@ const drawBoard = (ix, iy) => {
   );
 };
 
-init();
-
-function init() {
-  board.forEach((_, ix) => {
-    board.forEach((_, iy) => {
-      drawBoard(ix, iy);
-      drawPieces(iy, ix);
-    });
-  });
-}
-
-function drawPieces(iy, ix) {
+const drawPieces = (iy, ix) => {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
   const piece = board[iy][ix];
@@ -36,12 +25,15 @@ function drawPieces(iy, ix) {
     ix * config.fieldSize + config.fieldSize / 2 - 15,
     iy * config.fieldSize + config.fieldSize / 2 + 15
   );
-}
-
-canvas.addEventListener("dragstart", (e) => {
-  console.log(e);
-});
-
-canvas.ondragstart = function (e) {
-  console.log(e);
 };
+
+const init = () => {
+  board.forEach((_, ix) => {
+    board.forEach((_, iy) => {
+      drawBoard(ix, iy);
+      drawPieces(iy, ix);
+    });
+  });
+};
+
+init();
