@@ -1,16 +1,14 @@
-export class Game {
-  static countOfCorrectClicks = 0;
-  static choosenField = null;
+export const game = {
+  countOfCorrectClicks: 0,
+  choosenField: null,
 
-  static incrementNumberOfCorrectClicks() {
-    Game.countOfCorrectClicks++;
-  }
-
-  static resetNumberOfCorrectClicks() {
-    Game.countOfCorrectClicks = 0;
-  }
-
-  static setChoosenField(piece) {
-    Game.choosenField = piece;
-  }
-}
+  incrementNumberOfCorrectClicks() {
+    this.countOfCorrectClicks++;
+  },
+  resetNumberOfCorrectClicks() {
+    this.countOfCorrectClicks = 0;
+  },
+  setChoosenField(piece) {
+    this.choosenField = piece;
+  },
+};
