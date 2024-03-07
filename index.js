@@ -116,8 +116,6 @@ const redrawBoard = () => {
   init();
 };
 
-resetBoardToRookOnly(); // todo - remove after testing rook moves
-
 const onSecondClick = (y, x) => {
   const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
   board[getYField(game.choosenField.y)][game.choosenField.x] = null;
@@ -131,7 +129,8 @@ const onFirstClick = (x, y, fieldsCount) => {
   game.setChoosenField({ x, y });
   game.incrementNumberOfCorrectClicks();
 };
-function resetBoardToRookOnly() {
+
+const resetBoardToRookOnly = () => {
   board.forEach((_, ix) => {
     board.forEach((_, iy) => {
       board[iy][ix] = null;
@@ -141,4 +140,6 @@ function resetBoardToRookOnly() {
   board[3][3] = new Piece(1, pieces.R);
 
   redrawBoard();
-}
+};
+
+resetBoardToRookOnly(); // todo - remove after testing rook moves
