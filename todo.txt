@@ -5,3 +5,9 @@ poruszanie wieżą
 poruszanie gońcem
 poruszanie skoczkiem
 poruszanie pionkiem
+text baseline
+text align 
+getFieldY
+get first click / second click methods
+reset board
+ustaw tylko wieze

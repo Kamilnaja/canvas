@@ -27,15 +27,18 @@ const drawBoard = (ix, iy) => {
 };
 
 const drawPieces = (iy, ix) => {
-  const { fieldSize, verticalFieldsOffset, leftOffset } = config;
+  const { fieldSize, leftOffset } = config;
 
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
   const piece = board[iy][ix];
   ctx.fillText(
     piece?.actualSymbol || "",
-    ix * fieldSize + fieldSize / 2 - verticalFieldsOffset + leftOffset,
-    iy * fieldSize + fieldSize / 2 + verticalFieldsOffset
+    ix * fieldSize + fieldSize / 2 + leftOffset,
+    iy * fieldSize + fieldSize / 2
   );
 };
 
@@ -43,24 +46,21 @@ const drawNumbers = () => {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
 
-  for (let i = 0; i < 8; i++) {
-    ctx.fillText(
-      8 - i,
-      config.leftOffset / 3,
-      i * fieldSize + fieldSize / 2 + config.verticalFieldsOffset
-    );
+  for (let i = 0; i < config.fieldsCount; i++) {
+    ctx.fillText(config.fieldsCount - i, 10, i * fieldSize + fieldSize / 2);
   }
 };
 
 const drawLetters = () => {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
+  const { fieldSize, leftOffset, boardSize } = config;
 
   for (let i = 0; i < 8; i++) {
     ctx.fillText(
       getLetter(i).toUpperCase(),
-      i * fieldSize + fieldSize / 2 + 20,
-      config.boardSize + 30
+      i * fieldSize + leftOffset + fieldSize / 2,
+      boardSize + 30
     );
   }
 };
@@ -117,28 +117,48 @@ const redrawBoard = () => {
 };
 
 const drawMoves = (piece, x, y) => {
-  const { fieldsCount, fieldSize, verticalFieldsOffset } = config;
+  const { fieldsCount, fieldSize, leftOffset } = config;
   if (piece === "Rook") {
     for (let i = 0; i < fieldsCount; i++) {
       ctx.beginPath();
-      if (i !== x && i !== y) {
-        ctx.arc(
-          (i + 1) * fieldSize + fieldSize / 2 - verticalFieldsOffset - 5,
-          getYField(y) * fieldSize + fieldSize / 2,
-          3,
-          0,
-          2 * Math.PI
-        );
-        ctx.fillStyle = "orange";
-        ctx.arc(
-          (x + 1) * fieldSize + 5,
-          i * fieldSize + fieldSize / 2,
-          3,
-          0,
-          2 * Math.PI
-        );
-        ctx.fill();
-      }
+      ctx.fillStyle = "blue";
+      ctx.arc(
+        i * fieldSize + leftOffset + fieldSize / 2,
+        getYField(y) * fieldSize + fieldSize / 2,
+        3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fillStyle = "violet";
+
+      ctx.arc(
+        x * fieldSize + leftOffset + fieldSize / 2,
+        i * fieldSize + fieldSize / 2,
+        3,
+        0,
+        2 * Math.PI
+      );
+
+      ctx.fill();
+      // if (i !== x && i !== y) {
+      //   ctx.fillStyle = "blue";
+      //   console.log(x, y);
+      //   ctx.arc(
+      //     (i + 1) * fieldSize + fieldSize / 2 - verticalFieldsOffset - 5,
+      //     getYField(y) * fieldSize + fieldSize / 2,
+      //     3,
+      //     0,
+      //     2 * Math.PI
+      //   );
+      //   ctx.arc(
+      //     x * fieldSize + fieldSize / 2 - verticalFieldsOffset + leftOffset,
+      //     i * fieldSize + fieldSize / 2,
+      //     3,
+      //     0,
+      //     2 * Math.PI
+      //   );
+      //   ctx.fill();
+      // }
     }
   }
   if (piece === "Knight") {
