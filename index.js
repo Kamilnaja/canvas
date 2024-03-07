@@ -6,6 +6,7 @@ import { board } from "./board.js";
 import { config } from "./config.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
+import { getYField } from "./utils/getYField.js";
 
 const { fieldSize } = config;
 
@@ -95,17 +96,16 @@ canvas.addEventListener("click", (e) => {
     return;
   }
 
-  const piece = board[y][x];
+  const piece = board[getYField(y)][x];
 
   if (piece?.actualSymbol && game.countOfCorrectClicks === 0) {
     strokeClickedField(x, y, fieldsCount);
     game.setChoosenField({ x, y });
     game.incrementNumberOfCorrectClicks();
   } else if (game.countOfCorrectClicks === 1) {
-    const piece =
-      board[fieldsCount - game.choosenField.y - 1][game.choosenField.x];
-    board[fieldsCount - game.choosenField.y - 1][game.choosenField.x] = null;
-    board[fieldsCount - y - 1][x] = piece;
+    const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
+    board[getYField(game.choosenField.y)][game.choosenField.x] = null;
+    board[getYField(y)][x] = piece;
     redrawBoard();
     game.resetNumberOfCorrectClicks();
   }
