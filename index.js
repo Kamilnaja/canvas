@@ -4,6 +4,8 @@ const ctx = canvas.getContext("2d");
 import { game } from "./Game.js";
 import { board } from "./board.js";
 import { config } from "./config.js";
+import { Piece } from "./piece.js";
+import { pieces } from "./pieces.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
 import { getYField } from "./utils/getYField.js";
@@ -88,6 +90,10 @@ const init = () => {
 
 init();
 
+document.getElementById("reset").addEventListener("click", () => {
+  resetBoardToRookOnly();
+});
+
 canvas.addEventListener("click", (e) => {
   const { x, y } = getFieldCoordinate(e);
   const { fieldsCount } = config;
@@ -110,6 +116,8 @@ const redrawBoard = () => {
   init();
 };
 
+resetBoardToRookOnly(); // todo - remove after testing rook moves
+
 const onSecondClick = (y, x) => {
   const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
   board[getYField(game.choosenField.y)][game.choosenField.x] = null;
@@ -123,3 +131,14 @@ const onFirstClick = (x, y, fieldsCount) => {
   game.setChoosenField({ x, y });
   game.incrementNumberOfCorrectClicks();
 };
+function resetBoardToRookOnly() {
+  board.forEach((_, ix) => {
+    board.forEach((_, iy) => {
+      board[iy][ix] = null;
+    });
+  });
+
+  board[3][3] = new Piece(1, pieces.R);
+
+  redrawBoard();
+}
