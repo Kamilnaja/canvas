@@ -116,18 +116,24 @@ const redrawBoard = () => {
   init();
 };
 
+const drawMoves = (piece) => {};
+
+const onFirstClick = (x, y, fieldsCount) => {
+  strokeClickedField(x, y, fieldsCount);
+  game.setChoosenField({ x, y });
+  game.incrementNumberOfCorrectClicks();
+
+  const piece = board[getYField(y)][x];
+
+  drawMoves(piece.name);
+};
+
 const onSecondClick = (y, x) => {
   const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
   board[getYField(game.choosenField.y)][game.choosenField.x] = null;
   board[getYField(y)][x] = piece;
   redrawBoard();
   game.resetNumberOfCorrectClicks();
-};
-
-const onFirstClick = (x, y, fieldsCount) => {
-  strokeClickedField(x, y, fieldsCount);
-  game.setChoosenField({ x, y });
-  game.incrementNumberOfCorrectClicks();
 };
 
 const resetBoardToRookOnly = () => {
