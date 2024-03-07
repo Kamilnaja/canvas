@@ -99,19 +99,27 @@ canvas.addEventListener("click", (e) => {
   const piece = board[getYField(y)][x];
 
   if (piece?.actualSymbol && game.countOfCorrectClicks === 0) {
-    strokeClickedField(x, y, fieldsCount);
-    game.setChoosenField({ x, y });
-    game.incrementNumberOfCorrectClicks();
+    onFirstClick(x, y, fieldsCount);
   } else if (game.countOfCorrectClicks === 1) {
-    const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
-    board[getYField(game.choosenField.y)][game.choosenField.x] = null;
-    board[getYField(y)][x] = piece;
-    redrawBoard();
-    game.resetNumberOfCorrectClicks();
+    onSecondClick(y, x);
   }
 });
 
 const redrawBoard = () => {
   ctx.clearRect(0, 0, config.ctxWidth, config.ctxHeight);
   init();
+};
+
+const onSecondClick = (y, x) => {
+  const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
+  board[getYField(game.choosenField.y)][game.choosenField.x] = null;
+  board[getYField(y)][x] = piece;
+  redrawBoard();
+  game.resetNumberOfCorrectClicks();
+};
+
+const onFirstClick = (x, y, fieldsCount) => {
+  strokeClickedField(x, y, fieldsCount);
+  game.setChoosenField({ x, y });
+  game.incrementNumberOfCorrectClicks();
 };
