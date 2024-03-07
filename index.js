@@ -116,7 +116,35 @@ const redrawBoard = () => {
   init();
 };
 
-const drawMoves = (piece) => {};
+const drawMoves = (piece, x, y) => {
+  const { fieldsCount, fieldSize, verticalFieldsOffset } = config;
+  if (piece === "Rook") {
+    for (let i = 0; i < fieldsCount; i++) {
+      ctx.beginPath();
+      if (i !== x && i !== y) {
+        ctx.arc(
+          (i + 1) * fieldSize + fieldSize / 2 - verticalFieldsOffset - 5,
+          getYField(y) * fieldSize + fieldSize / 2,
+          3,
+          0,
+          2 * Math.PI
+        );
+        ctx.fillStyle = "orange";
+        ctx.arc(
+          (x + 1) * fieldSize + 5,
+          i * fieldSize + fieldSize / 2,
+          3,
+          0,
+          2 * Math.PI
+        );
+        ctx.fill();
+      }
+    }
+  }
+  if (piece === "Knight") {
+    return;
+  }
+};
 
 const onFirstClick = (x, y, fieldsCount) => {
   strokeClickedField(x, y, fieldsCount);
@@ -125,7 +153,7 @@ const onFirstClick = (x, y, fieldsCount) => {
 
   const piece = board[getYField(y)][x];
 
-  drawMoves(piece.name);
+  drawMoves(piece.name, x, y);
 };
 
 const onSecondClick = (y, x) => {
@@ -143,7 +171,7 @@ const resetBoardToRookOnly = () => {
     });
   });
 
-  board[3][3] = new Piece(1, pieces.R);
+  board[0][0] = new Piece(1, pieces.R);
 
   redrawBoard();
 };
