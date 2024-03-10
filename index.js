@@ -118,51 +118,30 @@ const redrawBoard = () => {
 
 const drawMoves = (piece, x, y) => {
   const { fieldsCount, fieldSize, leftOffset } = config;
-  if (piece === "Rook") {
-    for (let i = 0; i < fieldsCount; i++) {
-      ctx.beginPath();
-      ctx.fillStyle = "blue";
-      ctx.arc(
-        i * fieldSize + leftOffset + fieldSize / 2,
-        getYField(y) * fieldSize + fieldSize / 2,
-        3,
-        0,
-        2 * Math.PI
-      );
-      ctx.fillStyle = "violet";
+  switch (piece) {
+    case "Rook":
+      for (let i = 0; i < fieldsCount; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = "blue";
+        ctx.arc(
+          i * fieldSize + leftOffset + fieldSize / 2,
+          getYField(y) * fieldSize + fieldSize / 2,
+          3,
+          0,
+          2 * Math.PI
+        );
+        ctx.fillStyle = "violet";
 
-      ctx.arc(
-        x * fieldSize + leftOffset + fieldSize / 2,
-        i * fieldSize + fieldSize / 2,
-        3,
-        0,
-        2 * Math.PI
-      );
+        ctx.arc(
+          x * fieldSize + leftOffset + fieldSize / 2,
+          i * fieldSize + fieldSize / 2,
+          3,
+          0,
+          2 * Math.PI
+        );
 
-      ctx.fill();
-      // if (i !== x && i !== y) {
-      //   ctx.fillStyle = "blue";
-      //   console.log(x, y);
-      //   ctx.arc(
-      //     (i + 1) * fieldSize + fieldSize / 2 - verticalFieldsOffset - 5,
-      //     getYField(y) * fieldSize + fieldSize / 2,
-      //     3,
-      //     0,
-      //     2 * Math.PI
-      //   );
-      //   ctx.arc(
-      //     x * fieldSize + fieldSize / 2 - verticalFieldsOffset + leftOffset,
-      //     i * fieldSize + fieldSize / 2,
-      //     3,
-      //     0,
-      //     2 * Math.PI
-      //   );
-      //   ctx.fill();
-      // }
-    }
-  }
-  if (piece === "Knight") {
-    return;
+        ctx.fill();
+      }
   }
 };
 
