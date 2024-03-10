@@ -1,9 +1,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-import { game } from "./Game.js";
 import { board } from "./board.js";
 import { config } from "./config.js";
+import { game } from "./game.js";
 import { Piece } from "./piece.js";
 import { pieces } from "./pieces.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
@@ -87,8 +87,6 @@ const init = () => {
     });
   });
 };
-
-init();
 
 document.getElementById("reset").addEventListener("click", () => {
   resetBoardToOnePieceOnly();

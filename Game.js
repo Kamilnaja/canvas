@@ -18,4 +18,7 @@ export const game = {
   cleanPath() {
     this.paths = [];
   },
+  logPath() {
+    console.log(this.paths.flat());
+  },
 };
