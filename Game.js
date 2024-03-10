@@ -1,6 +1,7 @@
 export const game = {
   countOfCorrectClicks: 0,
   choosenField: null,
+  paths: [],
 
   incrementNumberOfCorrectClicks() {
     this.countOfCorrectClicks++;
@@ -10,5 +11,11 @@ export const game = {
   },
   setChoosenField(piece) {
     this.choosenField = piece;
+  },
+  setPath(path) {
+    this.paths = path;
+  },
+  cleanPath() {
+    this.paths = [];
   },
 };

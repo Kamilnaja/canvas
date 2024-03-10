@@ -91,7 +91,7 @@ const init = () => {
 init();
 
 document.getElementById("reset").addEventListener("click", () => {
-  resetBoardToRookOnly();
+  resetBoardToOnePieceOnly();
 });
 
 canvas.addEventListener("click", (e) => {
@@ -121,8 +121,8 @@ const drawMoves = (piece, x, y) => {
   switch (piece) {
     case "Rook":
       for (let i = 0; i < fieldsCount; i++) {
-        ctx.beginPath();
         ctx.fillStyle = "blue";
+        ctx.beginPath();
         ctx.arc(
           i * fieldSize + leftOffset + fieldSize / 2,
           getYField(y) * fieldSize + fieldSize / 2,
@@ -130,7 +130,6 @@ const drawMoves = (piece, x, y) => {
           0,
           2 * Math.PI
         );
-        ctx.fillStyle = "violet";
 
         ctx.arc(
           x * fieldSize + leftOffset + fieldSize / 2,
@@ -139,9 +138,34 @@ const drawMoves = (piece, x, y) => {
           0,
           2 * Math.PI
         );
-
         ctx.fill();
       }
+      break;
+    case "Bishop":
+      for (let i = 0; i < fieldsCount; i++) {
+        for (let j = 0; j < fieldsCount; j++) {
+          ctx.fillStyle = "black";
+          if (i === j) {
+            ctx.beginPath();
+            ctx.arc(
+              (i + x) * fieldSize + fieldSize / 2 + leftOffset,
+              j * fieldSize + fieldSize / 2,
+              3,
+              0,
+              2 * Math.PI
+            );
+            ctx.fill();
+          }
+          // ctx.arc(
+          //   j * fieldSize + leftOffset + fieldSize / 2,
+          //   j * fieldSize + fieldSize / 2,
+          //   3,
+          //   0,
+          //   2 * Math.PI
+          // );
+        }
+      }
+      break;
   }
 };
 
@@ -163,16 +187,16 @@ const onSecondClick = (y, x) => {
   game.resetNumberOfCorrectClicks();
 };
 
-const resetBoardToRookOnly = () => {
+const resetBoardToOnePieceOnly = () => {
   board.forEach((_, ix) => {
     board.forEach((_, iy) => {
       board[iy][ix] = null;
     });
   });
 
-  board[0][0] = new Piece(1, pieces.R);
+  board[3][3] = new Piece(1, pieces.R);
 
   redrawBoard();
 };
 
-resetBoardToRookOnly(); // todo - remove after testing rook moves
+resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
