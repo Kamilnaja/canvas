@@ -178,8 +178,10 @@ const onFirstClick = (x, y, fieldsCount) => {
 };
 
 const onSecondClick = (y, x) => {
-  const piece = board[getYField(game.choosenField.y)][game.choosenField.x];
-  board[getYField(game.choosenField.y)][game.choosenField.x] = null;
+  const { y: y1, x: x1 } = game.choosenField;
+
+  const piece = board[getYField(y1)][x1];
+  board[getYField(y1)][x1] = null;
   board[getYField(y)][x] = piece;
   redrawBoard();
   game.resetNumberOfCorrectClicks();
