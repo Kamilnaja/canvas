@@ -117,72 +117,13 @@ const redrawBoard = () => {
 };
 
 const drawMoves = (piece, x, y) => {
-  const { fieldsCount, fieldSize, leftOffset, pathWidth } = config;
+  const { fieldsCount, fieldSize, leftOffset } = config;
   switch (piece) {
     case "Rook":
       setPathsForRook(x, y, fieldsCount);
-
-      ctx.fillStyle = "blue";
-
-      for (let i = game.paths[0].start.x; i <= game.paths[0].end.x; i++) {
-        ctx.fillRect(
-          leftOffset + fieldSize * i + fieldSize / 2,
-          getYField(game.paths[0].start.y) * fieldSize + fieldSize / 2,
-          pathWidth,
-          pathWidth
-        );
-      }
-
-      for (let i = game.paths[1].start.y; i <= game.paths[1].end.y; i++) {
-        ctx.fillRect(
-          leftOffset + fieldSize * game.paths[1].start.x + fieldSize / 2,
-          getYField(i) * fieldSize + fieldSize / 2,
-          pathWidth,
-          pathWidth
-        );
-      }
-
-      for (let i = game.paths[2].end.x; i <= game.paths[2].start.y; i++) {
-        ctx.fillRect(
-          leftOffset + fieldSize * game.paths[2].start.x + fieldSize / 2,
-          getYField(i) * fieldSize + fieldSize / 2,
-          pathWidth,
-          pathWidth
-        );
-      }
-
-      for (let i = game.paths[3].end.y; i <= game.paths[2].start.y; i++) {
-        ctx.fillRect(
-          leftOffset + fieldSize * i + fieldSize / 2,
-          getYField(game.paths[2].start.y) * fieldSize + fieldSize / 2,
-          pathWidth,
-          pathWidth
-        );
-      }
-
-      // game.paths.forEach((item) => {
-      //   console.log(item);
-      // });
-      // ctx.fillRect(
-      //   game.paths[0][0][0] * config.fieldSize +
-      //     config.leftOffset +
-      //     config.fieldSize / 2,
-      //   getYField(game.paths[0][0][1]) * config.fieldSize +
-      //     config.fieldSize / 2,
-      //   5,
-      //   5
-      // );
-      // ctx.fillRect(
-      //   game.paths[0][1][0] * config.fieldSize +
-      //     config.leftOffset +
-      //     config.fieldSize / 2,
-      //   getYField(game.paths[0][1][1]) * config.fieldSize +
-      //     config.fieldSize / 2,
-      //   5,
-      //   5
-      // );
-
+      game.drawPaths(ctx, config);
       break;
+
     case "Bishop":
       for (let i = 0; i < fieldsCount; i++) {
         for (let j = 0; j < fieldsCount; j++) {
@@ -198,13 +139,6 @@ const drawMoves = (piece, x, y) => {
             );
             ctx.fill();
           }
-          // ctx.arc(
-          //   j * fieldSize + leftOffset + fieldSize / 2,
-          //   j * fieldSize + fieldSize / 2,
-          //   3,
-          //   0,
-          //   2 * Math.PI
-          // );
         }
       }
       break;
