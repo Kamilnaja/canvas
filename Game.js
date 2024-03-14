@@ -12,13 +12,15 @@ export const game = {
   setChoosenField(piece) {
     this.choosenField = piece;
   },
-  setPath(path) {
-    this.paths = path;
+  addToPath(path) {
+    this.paths.push(path);
   },
-  cleanPath() {
+  resetPaths() {
     this.paths = [];
   },
   logPath() {
-    console.log(this.paths.flat());
+    for (let i = 0; i < this.paths.length; i++) {
+      console.log(this.paths[i]);
+    }
   },
 };

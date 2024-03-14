@@ -1,6 +1,8 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+import { Coordinate } from "./Coordinate.js";
+import { Path } from "./Path.js";
 import { board } from "./board.js";
 import { config } from "./config.js";
 import { game } from "./game.js";
@@ -115,29 +117,71 @@ const redrawBoard = () => {
 };
 
 const drawMoves = (piece, x, y) => {
-  const { fieldsCount, fieldSize, leftOffset } = config;
+  const { fieldsCount, fieldSize, leftOffset, pathWidth } = config;
   switch (piece) {
     case "Rook":
-      for (let i = 0; i < fieldsCount; i++) {
-        ctx.fillStyle = "blue";
-        ctx.beginPath();
-        ctx.arc(
-          i * fieldSize + leftOffset + fieldSize / 2,
-          getYField(y) * fieldSize + fieldSize / 2,
-          3,
-          0,
-          2 * Math.PI
-        );
+      setPathsForRook(x, y, fieldsCount);
 
-        ctx.arc(
-          x * fieldSize + leftOffset + fieldSize / 2,
-          i * fieldSize + fieldSize / 2,
-          3,
-          0,
-          2 * Math.PI
+      ctx.fillStyle = "blue";
+
+      for (let i = game.paths[0].start.x; i <= game.paths[0].end.x; i++) {
+        ctx.fillRect(
+          leftOffset + fieldSize * i + fieldSize / 2,
+          getYField(game.paths[0].start.y) * fieldSize + fieldSize / 2,
+          pathWidth,
+          pathWidth
         );
-        ctx.fill();
       }
+
+      for (let i = game.paths[1].start.y; i <= game.paths[1].end.y; i++) {
+        ctx.fillRect(
+          leftOffset + fieldSize * game.paths[1].start.x + fieldSize / 2,
+          getYField(i) * fieldSize + fieldSize / 2,
+          pathWidth,
+          pathWidth
+        );
+      }
+
+      for (let i = game.paths[2].end.x; i <= game.paths[2].start.y; i++) {
+        ctx.fillRect(
+          leftOffset + fieldSize * game.paths[2].start.x + fieldSize / 2,
+          getYField(i) * fieldSize + fieldSize / 2,
+          pathWidth,
+          pathWidth
+        );
+      }
+
+      for (let i = game.paths[3].end.y; i <= game.paths[2].start.y; i++) {
+        ctx.fillRect(
+          leftOffset + fieldSize * i + fieldSize / 2,
+          getYField(game.paths[2].start.y) * fieldSize + fieldSize / 2,
+          pathWidth,
+          pathWidth
+        );
+      }
+
+      // game.paths.forEach((item) => {
+      //   console.log(item);
+      // });
+      // ctx.fillRect(
+      //   game.paths[0][0][0] * config.fieldSize +
+      //     config.leftOffset +
+      //     config.fieldSize / 2,
+      //   getYField(game.paths[0][0][1]) * config.fieldSize +
+      //     config.fieldSize / 2,
+      //   5,
+      //   5
+      // );
+      // ctx.fillRect(
+      //   game.paths[0][1][0] * config.fieldSize +
+      //     config.leftOffset +
+      //     config.fieldSize / 2,
+      //   getYField(game.paths[0][1][1]) * config.fieldSize +
+      //     config.fieldSize / 2,
+      //   5,
+      //   5
+      // );
+
       break;
     case "Bishop":
       for (let i = 0; i < fieldsCount; i++) {
@@ -185,6 +229,7 @@ const onSecondClick = (y, x) => {
   board[getYField(y)][x] = piece;
   redrawBoard();
   game.resetNumberOfCorrectClicks();
+  game.resetPaths();
 };
 
 const resetBoardToOnePieceOnly = () => {
@@ -200,3 +245,14 @@ const resetBoardToOnePieceOnly = () => {
 };
 
 resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
+
+function setPathsForRook(x, y, fieldsCount) {
+  game.addToPath(
+    new Path(new Coordinate(x, y), new Coordinate(fieldsCount - 1, y))
+  );
+  game.addToPath(
+    new Path(new Coordinate(x, y), new Coordinate(x, fieldsCount - 1))
+  );
+  game.addToPath(new Path(new Coordinate(x, y), new Coordinate(0, y)));
+  game.addToPath(new Path(new Coordinate(x, y), new Coordinate(x, 0)));
+}
