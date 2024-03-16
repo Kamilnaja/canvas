@@ -2,10 +2,10 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 import { Coordinate } from "./Coordinate.js";
-import { Path } from "./Path.js";
 import { findPieceByCoordinate, initialPieces } from "./board.js";
 import { config } from "./config.js";
 import { game } from "./game.js";
+import { paths } from "./paths.js";
 import { Piece } from "./piece.js";
 import { pieces } from "./pieces.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
@@ -122,13 +122,12 @@ const redrawBoard = () => {
   init();
 };
 
-const drawMoves = (piece, x, y) => {
+const checkPossibleMoves = (piece, x, y) => {
   const { fieldsCount, fieldSize, leftOffset } = config;
   switch (piece) {
     case "Rook":
-      setPathsForRook(x, y, fieldsCount);
-      game.drawPath(ctx, config);
-
+      paths.setPathsForRook(x, y, fieldsCount);
+      paths.drawPath(ctx, config);
       break;
 
     case "Bishop":
@@ -157,9 +156,8 @@ const onFirstClick = (x, y, fieldsCount) => {
   game.incrementNumberOfCorrectClicks();
 
   const piece = findPieceByCoordinate(new Coordinate(x, y));
-  console.log("piece", piece);
 
-  drawMoves(piece.name, x, y);
+  checkPossibleMoves(piece.name, x, y);
 };
 
 const onSecondClick = (x, y) => {
@@ -196,20 +194,9 @@ const onSecondClick = (x, y) => {
 const resetBoardToOnePieceOnly = () => {
   initialPieces.length = 0;
   initialPieces.push(new Piece(1, pieces.R, new Coordinate(0, 0)));
-
+  initialPieces.push(new Piece(1, pieces.P, new Coordinate(2, 0)));
   redrawBoard();
 };
 
 resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
 // init();
-
-const setPathsForRook = (x, y, fieldsCount) => {
-  game.addToPath(
-    new Path(new Coordinate(x, y), new Coordinate(fieldsCount - 1, y))
-  );
-  game.addToPath(
-    new Path(new Coordinate(x, y), new Coordinate(x, fieldsCount - 1))
-  );
-  game.addToPath(new Path(new Coordinate(x, y), new Coordinate(0, y)));
-  game.addToPath(new Path(new Coordinate(x, y), new Coordinate(x, 0)));
-};
