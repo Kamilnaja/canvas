@@ -58,19 +58,20 @@ export const paths = {
 
   setPathsForRook(piece) {
     const { x, y } = piece.coordinate;
-    const { fieldsCount } = config;
     const otherPieces = initialPieces.filter((item) => {
       return item.coordinate.x !== x || item.coordinate.y !== y;
     });
 
     const otherPiece = otherPieces[0];
 
-    evaluateCollisions(otherPiece, x, y, fieldsCount, piece);
+    evaluateCollisions(otherPiece, piece);
   },
 };
 
-const evaluateCollisions = (otherPiece, x, y, fieldsCount, piece) => {
+const evaluateCollisions = (otherPiece, piece) => {
+  const { fieldsCount } = config;
   const isSameColor = piece.color === otherPiece.color;
+  const { x, y } = piece.coordinate;
 
   const handleTheSameX = () => {
     console.log("the same x", console.log("y", y));
