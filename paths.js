@@ -69,27 +69,25 @@ export const paths = {
 };
 
 const evaluateCollisions = (otherPiece, x, y, fieldsCount, piece) => {
+  const isSameColor = piece.color === otherPiece.color;
+
   const handleTheSameX = () => {
     console.log("the same x", console.log("y", y));
 
     if (otherPiece.coordinate.y < y) {
       console.log("less y");
-
-      console.log(piece.color);
-      let endFieldY =
-        piece.color === otherPiece.color
-          ? otherPiece.coordinate.y + 1
-          : otherPiece.coordinate.y;
+      let endFieldY = isSameColor
+        ? otherPiece.coordinate.y + 1
+        : otherPiece.coordinate.y;
 
       paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
       paths.addToPath(new Path({ x, y }, { x, y: endFieldY }));
     } else {
       console.log("more y");
 
-      let endFieldY =
-        piece.color === otherPiece.color
-          ? otherPiece.coordinate.y - 1
-          : otherPiece.coordinate.y;
+      let endFieldY = isSameColor
+        ? otherPiece.coordinate.y - 1
+        : otherPiece.coordinate.y;
 
       paths.addToPath(new Path({ x, y }, { x, y: endFieldY }));
       paths.addToPath(new Path({ x, y }, { x, y: 0 }));
@@ -101,18 +99,16 @@ const evaluateCollisions = (otherPiece, x, y, fieldsCount, piece) => {
     paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
 
     if (otherPiece.coordinate.x < x) {
-      let endFieldX =
-        piece.color === otherPiece.color
-          ? otherPiece.coordinate.x + 1
-          : otherPiece.coordinate.x;
+      let endFieldX = isSameColor
+        ? otherPiece.coordinate.x + 1
+        : otherPiece.coordinate.x;
 
       paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
       paths.addToPath(new Path({ x, y }, { x: endFieldX, y: fieldsCount - 1 }));
     } else {
-      let endFieldX =
-        piece.color === otherPiece.color
-          ? otherPiece.coordinate.x - 1
-          : otherPiece.coordinate.x;
+      let endFieldX = isSameColor
+        ? otherPiece.coordinate.x - 1
+        : otherPiece.coordinate.x;
 
       paths.addToPath(new Path({ x, y }, { x: endFieldX, y }));
       paths.addToPath(new Path({ x, y }, { x: endFieldX, y: fieldsCount - 1 }));
