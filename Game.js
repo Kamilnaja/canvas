@@ -1,6 +1,5 @@
 import { Coordinate } from "./Coordinate.js";
 import { getYField } from "./utils/getYField.js";
-import { doInDoubleLoop } from "./utils/loop.utils.js";
 
 export const game = {
   countOfCorrectClicks: 0,
@@ -28,15 +27,7 @@ export const game = {
     }
   },
   getAllPathPoints() {
-    const res = new Set();
-
-    const takenCoordinates = [];
-
-    doInDoubleLoop((x, y) => {
-      takenCoordinates.push(new Coordinate(x, y));
-    });
-
-    this.paths.forEach((path) => {
+    return this.paths.reduce((res, path) => {
       if (path.start.x === path.end.x) {
         if (path.start.y < path.end.y) {
           for (let i = path.start.y; i <= path.end.y; i++) {
@@ -58,8 +49,8 @@ export const game = {
           }
         }
       }
-    });
-    return res;
+      return res;
+    }, new Set());
   },
   drawPath(ctx, config) {
     const { leftOffset, pathWidth, fieldSize } = config;
