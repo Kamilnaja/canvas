@@ -3,11 +3,12 @@ const ctx = canvas.getContext("2d");
 
 import { Coordinate } from "./Coordinate.js";
 import { Path } from "./Path.js";
-import { board } from "./board.js";
+import { board, initialPieces } from "./board.js";
 import { config } from "./config.js";
 import { game } from "./game.js";
 import { Piece } from "./piece.js";
 import { pieces } from "./pieces.js";
+import { doInBoardLoop } from "./utils/doInBoardLoop.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
 import { getYField } from "./utils/getYField.js";
@@ -28,7 +29,7 @@ const drawBoard = (ix, iy) => {
   );
 };
 
-const drawPieces = (iy, ix) => {
+const drawPieces = () => {
   const { fieldSize, leftOffset } = config;
 
   ctx.fillStyle = "black";
@@ -36,29 +37,36 @@ const drawPieces = (iy, ix) => {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  const piece = board[iy][ix];
-  ctx.fillText(
-    piece?.actualSymbol || "",
-    ix * fieldSize + fieldSize / 2 + leftOffset,
-    iy * fieldSize + fieldSize / 2
-  );
+  initialPieces.forEach((piece) => {
+    console.log(piece);
+    const { coordinate } = piece;
+    ctx.fillText(
+      piece?.actualSymbol || "",
+      coordinate.x * fieldSize + fieldSize / 2 + leftOffset,
+      getYField(coordinate.y) * fieldSize + fieldSize / 2
+    );
+  });
 };
 
 const drawNumbers = () => {
+  const { fieldSize, fieldsCount } = config;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
 
-  for (let i = 0; i < config.fieldsCount; i++) {
-    ctx.fillText(config.fieldsCount - i, 10, i * fieldSize + fieldSize / 2);
+  for (let i = 0; i < fieldsCount; i++) {
+    ctx.fillText(fieldsCount - i, 10, i * fieldSize + fieldSize / 2);
   }
 };
 
 const drawLetters = () => {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
-  const { fieldSize, leftOffset, boardSize } = config;
+  const { fieldSize, leftOffset, boardSize, fieldsCount } = config;
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < fieldsCount; i++) {
     ctx.fillText(
       getLetter(i).toUpperCase(),
       i * fieldSize + leftOffset + fieldSize / 2,
@@ -80,14 +88,13 @@ const strokeClickedField = (x, y, fieldsCount) => {
 };
 
 const init = () => {
-  board.forEach((_, ix) => {
-    board.forEach((_, iy) => {
-      drawBoard(ix, iy);
-      drawPieces(iy, ix);
-      drawNumbers();
-      drawLetters();
-    });
+  doInBoardLoop((i, j) => {
+    drawBoard(i, j);
+    drawNumbers();
+    drawLetters();
   });
+
+  drawPieces();
 };
 
 document.getElementById("reset").addEventListener("click", () => {
@@ -107,7 +114,7 @@ canvas.addEventListener("click", (e) => {
   if (piece?.actualSymbol && game.countOfCorrectClicks === 0) {
     onFirstClick(x, y, fieldsCount);
   } else if (game.countOfCorrectClicks === 1) {
-    onSecondClick(y, x);
+    onSecondClick(x, y);
   }
 });
 
@@ -177,10 +184,10 @@ const onSecondClick = (y, x) => {
 
   if (found) {
     console.log("move possible");
-    const piece = board[getYField(y1)][x1];
+    const piece = board[x1][getYField(y1)];
 
-    board[getYField(y1)][x1] = null;
-    board[getYField(y)][x] = piece;
+    board[x1][getYField(y1)] = null;
+    board[x][getYField(y)] = piece;
     redrawBoard();
     game.resetNumberOfCorrectClicks();
     game.resetPaths();
@@ -190,20 +197,24 @@ const onSecondClick = (y, x) => {
 };
 
 const resetBoardToOnePieceOnly = () => {
-  board.forEach((_, ix) => {
-    board.forEach((_, iy) => {
-      board[iy][ix] = null;
-    });
-  });
+  const { fieldsCount } = config;
+  for (let i = 0; i < fieldsCount; i++) {
+    for (let j = 0; j < fieldsCount; j++) {
+      board[i][j] = null;
+    }
+  }
 
-  board[3][3] = new Piece(1, pieces.R);
+  board[0][0] = new Piece(1, pieces.R);
+  // board[3][5] = new Piece(0, pieces.R);
+  // board[0][0] = new Piece(0, pieces.R);
 
   redrawBoard();
 };
 
-resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
+// resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
+init();
 
-function setPathsForRook(x, y, fieldsCount) {
+const setPathsForRook = (x, y, fieldsCount) => {
   game.addToPath(
     new Path(new Coordinate(x, y), new Coordinate(fieldsCount - 1, y))
   );
@@ -212,4 +223,4 @@ function setPathsForRook(x, y, fieldsCount) {
   );
   game.addToPath(new Path(new Coordinate(x, y), new Coordinate(0, y)));
   game.addToPath(new Path(new Coordinate(x, y), new Coordinate(x, 0)));
-}
+};

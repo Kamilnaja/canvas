@@ -1,4 +1,5 @@
 import { Coordinate } from "./Coordinate.js";
+import { board } from "./board.js";
 import { getYField } from "./utils/getYField.js";
 
 export const game = {
@@ -28,13 +29,28 @@ export const game = {
   },
   getAllPathPoints() {
     const res = new Set();
+
+    const takenCoordinates = [];
+    board.forEach((y, indexY) => {
+      board.forEach((x, indexX) => {
+        const field = board[indexX][indexY];
+        if (field !== null) {
+          console.log("field: ", field);
+          takenCoordinates.push(new Coordinate(indexX, indexY));
+        }
+      });
+    });
+    console.log(takenCoordinates);
+
     this.paths.forEach((path) => {
       if (path.start.x === path.end.x) {
         if (path.start.y < path.end.y) {
+          console.log(0.1);
           for (let i = path.start.y; i <= path.end.y; i++) {
             res.add(new Coordinate(path.start.x, i));
           }
         } else {
+          console.log(0.2);
           for (let i = path.end.y; i <= path.start.y; i++) {
             res.add(new Coordinate(path.start.x, i));
           }
@@ -55,7 +71,7 @@ export const game = {
   },
   drawPath(ctx, config) {
     const { leftOffset, pathWidth, fieldSize } = config;
-
+    ctx.fillStyle = "magenta";
     this.getAllPathPoints().forEach((item) => {
       ctx.fillRect(
         leftOffset + fieldSize * item.x + fieldSize / 2,

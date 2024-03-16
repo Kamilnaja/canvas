@@ -5,5 +5,5 @@ export const config = {
   boardSize: 400,
   fieldSize: 400 / 8,
   leftOffset: 30,
-  pathWidth: 10,
+  pathWidth: 7,
 };
