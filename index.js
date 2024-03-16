@@ -123,10 +123,10 @@ const redrawBoard = () => {
 };
 
 const checkPossibleMoves = (piece, x, y) => {
-  const { fieldsCount, fieldSize, leftOffset } = config;
-  switch (piece) {
+  const { fieldSize, leftOffset } = config;
+  switch (piece.name) {
     case "Rook":
-      paths.setPathsForRook(x, y, fieldsCount);
+      paths.setPathsForRook(x, y, piece);
       paths.drawPath(ctx, config);
       break;
 
@@ -157,7 +157,7 @@ const onFirstClick = (x, y, fieldsCount) => {
 
   const piece = findPieceByCoordinate(new Coordinate(x, y));
 
-  checkPossibleMoves(piece.name, x, y);
+  checkPossibleMoves(piece, x, y);
 };
 
 const onSecondClick = (x, y) => {
@@ -180,9 +180,7 @@ const onSecondClick = (x, y) => {
     const matchingPiece = initialPieces.find((item) => {
       return item.coordinate.x === x1 && item.coordinate.y === y1;
     });
-    console.log("found: ", matchingPiece);
-    console.log("moving to", x, y);
-    matchingPiece.coordinate = new Coordinate(x, y);
+    matchingPiece.coordinate = { x, y };
     redrawBoard();
     game.resetNumberOfCorrectClicks();
     paths.resetPaths();
@@ -193,8 +191,11 @@ const onSecondClick = (x, y) => {
 
 const resetBoardToOnePieceOnly = () => {
   initialPieces.length = 0;
-  initialPieces.push(new Piece(1, pieces.R, new Coordinate(2, 1)));
-  initialPieces.push(new Piece(1, pieces.P, new Coordinate(2, 3)));
+  initialPieces.push(new Piece(1, pieces.R, { x: 4, y: 5 }));
+  initialPieces.push(new Piece(0, pieces.P, { x: 1, y: 5 }));
+  initialPieces.push(new Piece(0, pieces.P, { x: 4, y: 2 }));
+  initialPieces.push(new Piece(1, pieces.P, { x: 1, y: 5 }));
+
   redrawBoard();
 };
 

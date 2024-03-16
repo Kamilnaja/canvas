@@ -1,6 +1,7 @@
 import { Coordinate } from "./Coordinate.js";
 import { Path } from "./Path.js";
 import { initialPieces } from "./board.js";
+import { config } from "./config.js";
 import { getYField } from "./utils/getYField.js";
 
 export const paths = {
@@ -55,36 +56,84 @@ export const paths = {
     });
   },
 
-  setPathsForRook(x, y, fieldsCount) {
+  setPathsForRook(x, y, piece) {
+    const { fieldsCount } = config;
     const otherPieces = initialPieces.filter((item) => {
       return item.coordinate.x !== x || item.coordinate.y !== y;
     });
 
-    otherPieces.forEach((item) => {
-      console.log(item.coordinate);
-    });
-
     const otherPiece = otherPieces[0];
 
-    if (otherPiece.coordinate.x === x) {
-      console.log("the same x");
-      paths.addToPath(new Path({ x, y }, { x: 0, y }));
-      paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
-
-      if (otherPiece.coordinate.y < y) {
-        console.log("less");
-      } else {
-        console.log("more");
-      }
-    } else if (otherPiece.coordinate.y === y) {
-      console.log("the same y");
-      paths.addToPath(new Path({ x, y }, { x, y: 0 }));
-      paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
-    } else {
-      paths.addToPath(new Path({ x, y }, { x: 0, y }));
-      paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
-      paths.addToPath(new Path({ x, y }, { x, y: 0 }));
-      paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
-    }
+    evaluateCollisions(otherPiece, x, y, fieldsCount, piece);
   },
+};
+
+const evaluateCollisions = (otherPiece, x, y, fieldsCount, piece) => {
+  const handleTheSameX = () => {
+    console.log("the same x", console.log("y", y));
+
+    if (otherPiece.coordinate.y < y) {
+      console.log("less y");
+
+      console.log(piece.color);
+      let endFieldY =
+        piece.color === otherPiece.color
+          ? otherPiece.coordinate.y + 1
+          : otherPiece.coordinate.y;
+
+      paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
+      paths.addToPath(new Path({ x, y }, { x, y: endFieldY }));
+    } else {
+      console.log("more y");
+
+      let endFieldY =
+        piece.color === otherPiece.color
+          ? otherPiece.coordinate.y - 1
+          : otherPiece.coordinate.y;
+
+      paths.addToPath(new Path({ x, y }, { x, y: endFieldY }));
+      paths.addToPath(new Path({ x, y }, { x, y: 0 }));
+    }
+  };
+
+  const handleTheSameY = () => {
+    paths.addToPath(new Path({ x, y }, { x, y: 0 }));
+    paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
+
+    if (otherPiece.coordinate.x < x) {
+      let endFieldX =
+        piece.color === otherPiece.color
+          ? otherPiece.coordinate.x + 1
+          : otherPiece.coordinate.x;
+
+      paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
+      paths.addToPath(new Path({ x, y }, { x: endFieldX, y: fieldsCount - 1 }));
+    } else {
+      let endFieldX =
+        piece.color === otherPiece.color
+          ? otherPiece.coordinate.x - 1
+          : otherPiece.coordinate.x;
+
+      paths.addToPath(new Path({ x, y }, { x: endFieldX, y }));
+      paths.addToPath(new Path({ x, y }, { x: endFieldX, y: fieldsCount - 1 }));
+    }
+  };
+
+  const handleNoCollisions = () => {
+    paths.addToPath(new Path({ x, y }, { x: 0, y }));
+    paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
+
+    // y
+    paths.addToPath(new Path({ x, y }, { x, y: 0 }));
+    paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
+  };
+
+  // check nearest pieces
+  if (otherPiece.coordinate.x === x) {
+    handleTheSameX();
+  } else if (otherPiece.coordinate.y === y) {
+    handleTheSameY(x, y, fieldsCount, otherPiece, piece);
+  } else {
+    handleNoCollisions();
+  }
 };
