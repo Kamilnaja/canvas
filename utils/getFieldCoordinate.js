@@ -2,9 +2,9 @@ import { config } from "./../config.js";
 
 export const getFieldCoordinate = (e) => {
   const { offsetX, offsetY } = e;
-  const { leftOffset, fieldSize } = config;
+  const { leftOffset, fieldSize, fieldsCount } = config;
 
   const x = Math.floor((offsetX - leftOffset) / fieldSize);
-  const y = Math.floor(8 - offsetY / fieldSize);
+  const y = Math.floor(fieldsCount - offsetY / fieldSize);
   return { x, y };
 };

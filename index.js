@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 import { Coordinate } from "./Coordinate.js";
 import { Path } from "./Path.js";
-import { board, initialPieces } from "./board.js";
+import { findPieceByCoordinate, initialPieces } from "./board.js";
 import { config } from "./config.js";
 import { game } from "./game.js";
 import { Piece } from "./piece.js";
@@ -38,7 +38,6 @@ const drawPieces = () => {
   ctx.textBaseline = "middle";
 
   initialPieces.forEach((piece) => {
-    console.log(piece);
     const { coordinate } = piece;
     ctx.fillText(
       piece?.actualSymbol || "",
@@ -109,7 +108,7 @@ canvas.addEventListener("click", (e) => {
     return;
   }
 
-  const piece = board[getYField(y)][x];
+  const piece = findPieceByCoordinate(new Coordinate(x, y));
 
   if (piece?.actualSymbol && game.countOfCorrectClicks === 0) {
     onFirstClick(x, y, fieldsCount);
@@ -152,20 +151,19 @@ const drawMoves = (piece, x, y) => {
 };
 
 const onFirstClick = (x, y, fieldsCount) => {
+  console.log("first click");
   strokeClickedField(x, y, fieldsCount);
   game.setChoosenField({ x, y });
   game.incrementNumberOfCorrectClicks();
 
-  const piece = board[getYField(y)][x];
+  const piece = findPieceByCoordinate(new Coordinate(x, y));
+  console.log("piece", piece);
 
   drawMoves(piece.name, x, y);
 };
 
-const onSecondClick = (y, x) => {
+const onSecondClick = (x, y) => {
   const { y: y1, x: x1 } = game.choosenField;
-
-  // check if move is correct
-  console.log("my", { y: getYField(y), x });
 
   if (y1 === y && x1 === x) {
     console.log("cannot click the same field!!");
@@ -181,11 +179,12 @@ const onSecondClick = (y, x) => {
   }
 
   if (found) {
-    console.log("move possible");
-    const piece = board[x1][getYField(y1)];
-
-    board[x1][getYField(y1)] = null;
-    board[x][getYField(y)] = piece;
+    const matchingPiece = initialPieces.find((item) => {
+      return item.coordinate.x === x1 && item.coordinate.y === y1;
+    });
+    console.log("found: ", matchingPiece);
+    console.log("moving to", x, y);
+    matchingPiece.coordinate = new Coordinate(x, y);
     redrawBoard();
     game.resetNumberOfCorrectClicks();
     game.resetPaths();

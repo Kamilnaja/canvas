@@ -1,6 +1,6 @@
 import { Coordinate } from "./Coordinate.js";
-import { board } from "./board.js";
 import { getYField } from "./utils/getYField.js";
+import { doInDoubleLoop } from "./utils/loop.utils.js";
 
 export const game = {
   countOfCorrectClicks: 0,
@@ -31,26 +31,18 @@ export const game = {
     const res = new Set();
 
     const takenCoordinates = [];
-    board.forEach((y, indexY) => {
-      board.forEach((x, indexX) => {
-        const field = board[indexX][indexY];
-        if (field !== null) {
-          console.log("field: ", field);
-          takenCoordinates.push(new Coordinate(indexX, indexY));
-        }
-      });
+
+    doInDoubleLoop((x, y) => {
+      takenCoordinates.push(new Coordinate(x, y));
     });
-    console.log(takenCoordinates);
 
     this.paths.forEach((path) => {
       if (path.start.x === path.end.x) {
         if (path.start.y < path.end.y) {
-          console.log(0.1);
           for (let i = path.start.y; i <= path.end.y; i++) {
             res.add(new Coordinate(path.start.x, i));
           }
         } else {
-          console.log(0.2);
           for (let i = path.end.y; i <= path.start.y; i++) {
             res.add(new Coordinate(path.start.x, i));
           }

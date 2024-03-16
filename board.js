@@ -37,39 +37,10 @@ export const initialPieces = [
   new Piece(color.black, pieces.R, new Coordinate(7, 7)),
 ];
 
-export const board = [
-  [new Piece(0, pieces.B), new Piece(0, pieces.N), new Piece(0, pieces.R)],
-  [
-    new Piece(0, pieces.P),
-    new Piece(0, pieces.P),
-    new Piece(0, pieces.P),
-    new Piece(0, pieces.P),
-    new Piece(0, pieces.P),
-    new Piece(0, pieces.P),
-    new Piece(0, pieces.P),
-  ],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-    new Piece(1, pieces.P),
-  ],
-  [
-    new Piece(1, pieces.R),
-    new Piece(1, pieces.N),
-    new Piece(1, pieces.B),
-    new Piece(1, pieces.Q),
-    new Piece(1, pieces.K),
-    new Piece(1, pieces.B),
-    new Piece(1, pieces.N),
-    new Piece(1, pieces.R),
-  ],
-];
+export const findPieceByCoordinate = (coordinate) => {
+  return initialPieces.find((item) => {
+    return (
+      item.coordinate.x === coordinate.x && item.coordinate.y === coordinate.y
+    );
+  });
+};
