@@ -8,10 +8,10 @@ import { config } from "./config.js";
 import { game } from "./game.js";
 import { Piece } from "./piece.js";
 import { pieces } from "./pieces.js";
-import { doInDoubleLoop, doInSingleLoop } from "./utils/doInBoardLoop.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
 import { getYField } from "./utils/getYField.js";
+import { doInDoubleLoop, doInSingleLoop } from "./utils/loop.utils.js";
 
 const { fieldSize } = config;
 
@@ -195,19 +195,14 @@ const onSecondClick = (y, x) => {
 };
 
 const resetBoardToOnePieceOnly = () => {
-  doInDoubleLoop((i, j) => {
-    board[i][j] = null;
-  });
-
-  board[0][0] = new Piece(1, pieces.R);
-  // board[3][5] = new Piece(0, pieces.R);
-  // board[0][0] = new Piece(0, pieces.R);
+  initialPieces.length = 0;
+  initialPieces.push(new Piece(1, pieces.R, new Coordinate(0, 0)));
 
   redrawBoard();
 };
 
-// resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
-init();
+resetBoardToOnePieceOnly(); // todo - remove after testing rook moves
+// init();
 
 const setPathsForRook = (x, y, fieldsCount) => {
   game.addToPath(
