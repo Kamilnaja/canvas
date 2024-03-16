@@ -8,14 +8,14 @@ import { config } from "./config.js";
 import { game } from "./game.js";
 import { Piece } from "./piece.js";
 import { pieces } from "./pieces.js";
-import { doInBoardLoop } from "./utils/doInBoardLoop.js";
+import { doInDoubleLoop, doInSingleLoop } from "./utils/doInBoardLoop.js";
 import { getFieldCoordinate } from "./utils/getFieldCoordinate.js";
 import { getLetter } from "./utils/getLetter.js";
 import { getYField } from "./utils/getYField.js";
 
 const { fieldSize } = config;
 
-const drawBoard = (ix, iy) => {
+const drawChessBoard = (ix, iy) => {
   const { leftOffset } = config;
 
   const colors = ["#f4f6f6", "#ba4a00"];
@@ -56,23 +56,23 @@ const drawNumbers = () => {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
 
-  for (let i = 0; i < fieldsCount; i++) {
+  doInSingleLoop((i) => {
     ctx.fillText(fieldsCount - i, 10, i * fieldSize + fieldSize / 2);
-  }
+  });
 };
 
 const drawLetters = () => {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
-  const { fieldSize, leftOffset, boardSize, fieldsCount } = config;
+  const { fieldSize, leftOffset, boardSize } = config;
 
-  for (let i = 0; i < fieldsCount; i++) {
+  doInSingleLoop((i) => {
     ctx.fillText(
       getLetter(i).toUpperCase(),
       i * fieldSize + leftOffset + fieldSize / 2,
       boardSize + 30
     );
-  }
+  });
 };
 
 const strokeClickedField = (x, y, fieldsCount) => {
@@ -88,8 +88,8 @@ const strokeClickedField = (x, y, fieldsCount) => {
 };
 
 const init = () => {
-  doInBoardLoop((i, j) => {
-    drawBoard(i, j);
+  doInDoubleLoop((i, j) => {
+    drawChessBoard(i, j);
     drawNumbers();
     drawLetters();
   });
@@ -133,22 +133,20 @@ const drawMoves = (piece, x, y) => {
       break;
 
     case "Bishop":
-      for (let i = 0; i < fieldsCount; i++) {
-        for (let j = 0; j < fieldsCount; j++) {
-          ctx.fillStyle = "black";
-          if (i === j) {
-            ctx.beginPath();
-            ctx.arc(
-              (i + x) * fieldSize + fieldSize / 2 + leftOffset,
-              j * fieldSize + fieldSize / 2,
-              3,
-              0,
-              2 * Math.PI
-            );
-            ctx.fill();
-          }
+      doInDoubleLoop((i, j) => {
+        ctx.fillStyle = "black";
+        if (i === j) {
+          ctx.beginPath();
+          ctx.arc(
+            (i + x) * fieldSize + fieldSize / 2 + leftOffset,
+            j * fieldSize + fieldSize / 2,
+            3,
+            0,
+            2 * Math.PI
+          );
+          ctx.fill();
         }
-      }
+      });
       break;
   }
 };
@@ -197,12 +195,9 @@ const onSecondClick = (y, x) => {
 };
 
 const resetBoardToOnePieceOnly = () => {
-  const { fieldsCount } = config;
-  for (let i = 0; i < fieldsCount; i++) {
-    for (let j = 0; j < fieldsCount; j++) {
-      board[i][j] = null;
-    }
-  }
+  doInDoubleLoop((i, j) => {
+    board[i][j] = null;
+  });
 
   board[0][0] = new Piece(1, pieces.R);
   // board[3][5] = new Piece(0, pieces.R);
