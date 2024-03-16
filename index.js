@@ -121,7 +121,8 @@ const drawMoves = (piece, x, y) => {
   switch (piece) {
     case "Rook":
       setPathsForRook(x, y, fieldsCount);
-      game.drawPaths(ctx, config);
+      game.drawPath(ctx, config);
+
       break;
 
     case "Bishop":
@@ -158,12 +159,34 @@ const onFirstClick = (x, y, fieldsCount) => {
 const onSecondClick = (y, x) => {
   const { y: y1, x: x1 } = game.choosenField;
 
-  const piece = board[getYField(y1)][x1];
-  board[getYField(y1)][x1] = null;
-  board[getYField(y)][x] = piece;
-  redrawBoard();
-  game.resetNumberOfCorrectClicks();
-  game.resetPaths();
+  // check if move is correct
+  console.log("my", { y: getYField(y), x });
+
+  if (y1 === y && x1 === x) {
+    console.log("cannot click the same field!!");
+    return;
+  }
+  let found;
+
+  for (const obj of game.getAllPathPoints()) {
+    if (JSON.stringify(obj) === JSON.stringify({ x, y })) {
+      found = true;
+      break;
+    }
+  }
+
+  if (found) {
+    console.log("move possible");
+    const piece = board[getYField(y1)][x1];
+
+    board[getYField(y1)][x1] = null;
+    board[getYField(y)][x] = piece;
+    redrawBoard();
+    game.resetNumberOfCorrectClicks();
+    game.resetPaths();
+  } else {
+    console.log("not possible");
+  }
 };
 
 const resetBoardToOnePieceOnly = () => {
