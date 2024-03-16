@@ -1,5 +1,6 @@
 import { Coordinate } from "./Coordinate.js";
 import { Path } from "./Path.js";
+import { initialPieces } from "./board.js";
 import { getYField } from "./utils/getYField.js";
 
 export const paths = {
@@ -55,19 +56,35 @@ export const paths = {
   },
 
   setPathsForRook(x, y, fieldsCount) {
-    // const otherPieces = initialPieces.filter((item) => {
-    //   return item.coordinate.x !== x && item.coordinate.y !== y;
-    // });
+    const otherPieces = initialPieces.filter((item) => {
+      return item.coordinate.x !== x || item.coordinate.y !== y;
+    });
 
-    // console.log(otherPieces);
+    otherPieces.forEach((item) => {
+      console.log(item.coordinate);
+    });
 
-    paths.addToPath(
-      new Path(new Coordinate(x, y), new Coordinate(fieldsCount - 1, y))
-    );
-    paths.addToPath(
-      new Path(new Coordinate(x, y), new Coordinate(x, fieldsCount - 1))
-    );
-    paths.addToPath(new Path(new Coordinate(x, y), new Coordinate(0, y)));
-    paths.addToPath(new Path(new Coordinate(x, y), new Coordinate(x, 0)));
+    const otherPiece = otherPieces[0];
+
+    if (otherPiece.coordinate.x === x) {
+      console.log("the same x");
+      paths.addToPath(new Path({ x, y }, { x: 0, y }));
+      paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
+
+      if (otherPiece.coordinate.y < y) {
+        console.log("less");
+      } else {
+        console.log("more");
+      }
+    } else if (otherPiece.coordinate.y === y) {
+      console.log("the same y");
+      paths.addToPath(new Path({ x, y }, { x, y: 0 }));
+      paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
+    } else {
+      paths.addToPath(new Path({ x, y }, { x: 0, y }));
+      paths.addToPath(new Path({ x, y }, { x: fieldsCount - 1, y }));
+      paths.addToPath(new Path({ x, y }, { x, y: 0 }));
+      paths.addToPath(new Path({ x, y }, { x, y: fieldsCount - 1 }));
+    }
   },
 };

@@ -169,7 +169,7 @@ const onSecondClick = (x, y) => {
   }
   let found;
 
-  for (const obj of game.getAllPathPoints()) {
+  for (const obj of paths.getAllPathPoints()) {
     if (JSON.stringify(obj) === JSON.stringify({ x, y })) {
       found = true;
       break;
@@ -185,7 +185,7 @@ const onSecondClick = (x, y) => {
     matchingPiece.coordinate = new Coordinate(x, y);
     redrawBoard();
     game.resetNumberOfCorrectClicks();
-    game.resetPaths();
+    paths.resetPaths();
   } else {
     console.log("not possible");
   }
@@ -193,8 +193,8 @@ const onSecondClick = (x, y) => {
 
 const resetBoardToOnePieceOnly = () => {
   initialPieces.length = 0;
-  initialPieces.push(new Piece(1, pieces.R, new Coordinate(0, 0)));
-  initialPieces.push(new Piece(1, pieces.P, new Coordinate(2, 0)));
+  initialPieces.push(new Piece(1, pieces.R, new Coordinate(2, 1)));
+  initialPieces.push(new Piece(1, pieces.P, new Coordinate(2, 3)));
   redrawBoard();
 };
 
