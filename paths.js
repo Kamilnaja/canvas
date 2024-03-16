@@ -56,7 +56,8 @@ export const paths = {
     });
   },
 
-  setPathsForRook(x, y, piece) {
+  setPathsForRook(piece) {
+    const { x, y } = piece.coordinate;
     const { fieldsCount } = config;
     const otherPieces = initialPieces.filter((item) => {
       return item.coordinate.x !== x || item.coordinate.y !== y;

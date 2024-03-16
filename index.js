@@ -122,29 +122,14 @@ const redrawBoard = () => {
   init();
 };
 
-const checkPossibleMoves = (piece, x, y) => {
-  const { fieldSize, leftOffset } = config;
+const checkPossibleMoves = (piece) => {
   switch (piece.name) {
     case "Rook":
-      paths.setPathsForRook(x, y, piece);
+      paths.setPathsForRook(piece);
       paths.drawPath(ctx, config);
       break;
 
     case "Bishop":
-      doInDoubleLoop((i, j) => {
-        ctx.fillStyle = "black";
-        if (i === j) {
-          ctx.beginPath();
-          ctx.arc(
-            (i + x) * fieldSize + fieldSize / 2 + leftOffset,
-            j * fieldSize + fieldSize / 2,
-            3,
-            0,
-            2 * Math.PI
-          );
-          ctx.fill();
-        }
-      });
       break;
   }
 };
@@ -155,9 +140,9 @@ const onFirstClick = (x, y, fieldsCount) => {
   game.setChoosenField({ x, y });
   game.incrementNumberOfCorrectClicks();
 
-  const piece = findPieceByCoordinate(new Coordinate(x, y));
+  const piece = findPieceByCoordinate({ x, y });
 
-  checkPossibleMoves(piece, x, y);
+  checkPossibleMoves(piece);
 };
 
 const onSecondClick = (x, y) => {
